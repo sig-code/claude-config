@@ -1,0 +1,15 @@
+# Ignore all files by default
+*
+
+# Include custom configuration files
+!CLAUDE.md
+!commands.md
+!.gitignore
+
+# Include commands directory and its contents
+!commands/
+!commands/**
+
+# Include templates directory and its contents
+!templates/
+!templates/**

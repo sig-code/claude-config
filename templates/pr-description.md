@@ -1,9 +1,7 @@
 ## 📋 概要
 {{summary}}
 
-{{#ticketNumber}}
-**関連**: closes {{ticketNumber}}
-{{/ticketNumber}}
+**関連**: closes-
 
 ## 🎯 なぜ・何を変更したか
 ### 背景・理由
@@ -24,4 +22,4 @@
 {{/hasCautions}}
 
 ---
-🤖 Generated with Claude Code (Standard) | Files: {{fileCount}} | Lines: ±{{totalChanges}}
+🤖 Generated with Claude Code

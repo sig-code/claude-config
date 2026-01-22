@@ -1,0 +1,145 @@
+{
+  "model": "anthropic.claude-sonnet-4-5-20250929-v1:0",
+  "env": {
+    "CLAUDE_CODE_USE_BEDROCK": "1",
+    "AWS_BEARER_TOKEN_BEDROCK": "YOUR_AWS_BEARER_TOKEN_HERE",
+    "ANTHROPIC_MODEL": "anthropic.claude-sonnet-4-5-20250929-v1:0",
+    "ANTHROPIC_SMALL_FAST_MODEL": "jp.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "jp.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "AWS_PROFILE": "YOUR_AWS_PROFILE",
+    "AWS_REGION": "ap-northeast-1",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "4096",
+    "MAX_THINKING_TOKENS": "1024"
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Pop.aiff"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Pop.aiff"
+          }
+        ]
+      }
+    ],
+    "BeforeToolCall": [
+      {
+        "matcher": "Bash(git push.*origin.*master|git push.*origin.*main)",
+        "hooks": [
+          {
+            "type": "deny",
+            "message": "🚫 master/main ブランチへの直接プッシュは禁止されています。feature ブランチを作成してプルリクエストを使用してください。"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git commit.*master|git commit.*main|git checkout master|git checkout main)",
+        "hooks": [
+          {
+            "type": "warn",
+            "message": "⚠️ master/main ブランチで作業していますが、本当に実行しますか？feature ブランチでの作業を推奨します。"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(.*--no-verify.*)",
+        "hooks": [
+          {
+            "type": "deny",
+            "message": "🚫 --no-verify フラグの使用は禁止されています。pre-commit フックをスキップしないでください。"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(curl.*-X.*(POST|PUT|DELETE|PATCH).*|wget.*--method.*(POST|PUT|DELETE|PATCH).*)",
+        "hooks": [
+          {
+            "type": "warn",
+            "message": "⚠️ 外部リソースへのPOST/PUT/DELETE操作を実行しようとしています。本当に実行して良いですか？"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit(.env$|.env.local$|.env.production$)",
+        "hooks": [
+          {
+            "type": "deny",
+            "message": "🚫 .env ファイルの変更は禁止されています。環境変数の変更が必要な場合は、.env.example を更新してください。"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit(.*\\.migration\\.ts$)",
+        "hooks": [
+          {
+            "type": "warn",
+            "message": "⚠️ 既存のマイグレーションファイルを編集しています。既に実行されたマイグレーションの変更は危険です。新しいマイグレーションを作成することを検討してください。"
+          }
+        ]
+      }
+    ],
+    "AfterWrite": [
+      {
+        "matcher": "fondesk-api/src/.*\\.spec\\.ts$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '\n✅ テストファイルが作成されました。テストを実行して確認してください:\nnpm run test --prefix fondesk-api -- $FILE_PATH\nnpm run test:cov --prefix fondesk-api -- $FILE_PATH'"
+          }
+        ]
+      },
+      {
+        "matcher": "fondesk-api/src/.*\\.entity\\.ts$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '\n📊 Entity ファイルが作成されました。以下を確認してください:\n- 頻繁にクエリされるカラムにインデックスを追加しましたか？\n- リレーションは適切に定義されていますか？\n- 論理削除（deleted_at）が必要ですか？'"
+          }
+        ]
+      },
+      {
+        "matcher": "fondesk-api/src/.*\\.service\\.ts$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '\n🔧 Service ファイルが作成されました。以下を確認してください:\n- 適切なエラーハンドリング（try-catch）がありますか？\n- 重要な処理にログを追加しましたか？\n- トランザクションが必要な箇所で使用していますか？'"
+          }
+        ]
+      },
+      {
+        "matcher": "fondesk-api/src/.*/dto/.*\\.dto\\.ts$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '\n✨ DTO ファイルが作成されました。以下を確認してください:\n- class-validator デコレータ（@IsString, @IsNotEmpty など）を追加しましたか？\n- バリデーションルールは適切ですか？\n- Swagger デコレータ（@ApiProperty）を追加しましたか？'"
+          }
+        ]
+      },
+      {
+        "matcher": "fondesk-api/src/.*\\.migration\\.ts$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '\n🗄️ マイグレーションファイルが作成されました。以下を確認してください:\n- up() と down() の両方が実装されていますか？\n- 本番環境への影響を評価しましたか？\n- インデックスは適切に設定されていますか？\n\nサブエージェントを使った検証を推奨します:\nサブエージェントを使ってこのマイグレーションを検証して'"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "echo 'Claude Code'"
+  }
+}

@@ -1,15 +1,27 @@
 # Ignore all files by default
 *
 
-# Include custom configuration files
+# Include public configuration files
+!README.md
+!LICENSE
+!.gitignore
+!settings.template.json
 !CLAUDE.md
 !commands.md
-!.gitignore
+!MODEL_SWITCH_README.md
+!SETUP_COMPLETE.md
+!switch-model.sh
 
-# Include commands directory and its contents
+# Include directories and their contents
 !commands/
 !commands/**
-
-# Include templates directory and its contents
+!agents/
+!agents/**
+!skills/
+!skills/**
 !templates/
 !templates/**
+
+# Exclude sensitive files even if matched above
+settings.json
+statusline.sh

@@ -4,11 +4,11 @@
 
 SETTINGS_FILE="$HOME/.claude/settings.json"
 
-# 利用可能なモデル定義
+# 利用可能なモデル定義（推論プロファイルID）
 declare -A MODELS
-MODELS[sonnet]="anthropic.claude-sonnet-4-5-20250929-v1:0"
-MODELS[opus]="anthropic.claude-opus-4-5-20251101-v1:0"
-MODELS[haiku]="anthropic.claude-haiku-4-5-20251001-v1:0"
+MODELS[sonnet]="jp.anthropic.claude-sonnet-4-5-20250929-v1:0"
+MODELS[opus]="global.anthropic.claude-opus-4-5-20251101-v1:0"
+MODELS[haiku]="jp.anthropic.claude-haiku-4-5-20251001-v1:0"
 
 # 使用方法を表示
 show_usage() {

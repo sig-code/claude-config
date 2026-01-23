@@ -12,7 +12,7 @@
 
 - **使用法**: `/コマンド名 <引数> [オプション]`
 - **機能**: コマンドの機能説明
-- **オプション**: 
+- **オプション**:
   - `--オプション`: オプションの説明
 - **備考**: 追加の注意事項
 ```
@@ -64,3 +64,44 @@
 - **タイトル**: 日本語で記述
 - **説明**: 日本語で記述
 - **承認**: 1人の approve が必要
+
+## Hooks 設定
+
+### 重要: type フィールドの有効な値
+Claude Code Hooks の `type` フィールドには以下の値のみが有効です：
+- `"command"` - bash コマンドを実行
+- `"prompt"` - LLM ベースの評価（Stop, SubagentStop などで使用）
+
+**⚠️ `"deny"` や `"warn"` は無効な値です！**
+
+### ブロック（deny 相当）の実装方法
+exit code 2 を使用してツール呼び出しをブロックします：
+```json
+{
+  "type": "command",
+  "command": "echo 'エラーメッセージ' >&2 && exit 2"
+}
+```
+- stderr にメッセージを出力し、exit code 2 で終了
+- Claude にエラーメッセージが表示され、ツール呼び出しがブロックされる
+
+### 警告・確認（warn 相当）の実装方法
+JSON 出力で `permissionDecision: "ask"` を返します：
+```json
+{
+  "type": "command",
+  "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"警告メッセージ\"}}'"
+}
+```
+- ユーザーに確認ダイアログが表示される
+- `"permissionDecision": "allow"` で自動承認、`"deny"` でブロックも可能
+
+### Exit Code の意味
+| Exit Code | 動作 |
+|-----------|------|
+| 0 | 成功。stdout は verbose モードで表示 |
+| 2 | ブロックエラー。stderr が Claude に表示される |
+| その他 | 非ブロックエラー。処理は継続 |
+
+### 参考ドキュメント
+- https://code.claude.com/docs/en/hooks

@@ -39,8 +39,26 @@
         "matcher": "Bash(git push.*origin.*master|git push.*origin.*main)",
         "hooks": [
           {
-            "type": "deny",
-            "message": "🚫 master/main ブランチへの直接プッシュは禁止されています。feature ブランチを作成してプルリクエストを使用してください。"
+            "type": "command",
+            "command": "echo '🚫 master/main ブランチへの直接プッシュは禁止されています。feature ブランチを作成してプルリクエストを使用してください。' >&2 && exit 2"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git push.*(--force|-f).*|git push.*(-f|--force).*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🚫 force push は禁止されています。リモートの履歴を上書きしないでください。' >&2 && exit 2"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash(git reset.*--hard.*|git clean.*-f.*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🚫 git reset --hard / git clean -f はローカルの変更を消去します。本当に実行したい場合はユーザーに確認してください。' >&2 && exit 2"
           }
         ]
       },
@@ -48,8 +66,8 @@
         "matcher": "Bash(git commit.*master|git commit.*main|git checkout master|git checkout main)",
         "hooks": [
           {
-            "type": "warn",
-            "message": "⚠️ master/main ブランチで作業していますが、本当に実行しますか？feature ブランチでの作業を推奨します。"
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"⚠️ master/main ブランチで作業していますが、本当に実行しますか？feature ブランチでの作業を推奨します。\"}}'"
           }
         ]
       },
@@ -57,8 +75,8 @@
         "matcher": "Bash(.*--no-verify.*)",
         "hooks": [
           {
-            "type": "deny",
-            "message": "🚫 --no-verify フラグの使用は禁止されています。pre-commit フックをスキップしないでください。"
+            "type": "command",
+            "command": "echo '🚫 --no-verify フラグの使用は禁止されています。pre-commit フックをスキップしないでください。' >&2 && exit 2"
           }
         ]
       },
@@ -66,8 +84,8 @@
         "matcher": "Bash(curl.*-X.*(POST|PUT|DELETE|PATCH).*|wget.*--method.*(POST|PUT|DELETE|PATCH).*)",
         "hooks": [
           {
-            "type": "warn",
-            "message": "⚠️ 外部リソースへのPOST/PUT/DELETE操作を実行しようとしています。本当に実行して良いですか？"
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"⚠️ 外部リソースへのPOST/PUT/DELETE操作を実行しようとしています。本当に実行して良いですか？\"}}'"
           }
         ]
       },
@@ -75,8 +93,8 @@
         "matcher": "Edit(.env$|.env.local$|.env.production$)",
         "hooks": [
           {
-            "type": "deny",
-            "message": "🚫 .env ファイルの変更は禁止されています。環境変数の変更が必要な場合は、.env.example を更新してください。"
+            "type": "command",
+            "command": "echo '🚫 .env ファイルの変更は禁止されています。環境変数の変更が必要な場合は、.env.example を更新してください。' >&2 && exit 2"
           }
         ]
       },
@@ -84,15 +102,15 @@
         "matcher": "Edit(.*\\.migration\\.ts$)",
         "hooks": [
           {
-            "type": "warn",
-            "message": "⚠️ 既存のマイグレーションファイルを編集しています。既に実行されたマイグレーションの変更は危険です。新しいマイグレーションを作成することを検討してください。"
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"ask\",\"permissionDecisionReason\":\"⚠️ 既存のマイグレーションファイルを編集しています。既に実行されたマイグレーションの変更は危険です。新しいマイグレーションを作成することを検討してください。\"}}'"
           }
         ]
       }
     ],
-    "AfterWrite": [
+    "PostToolUse": [
       {
-        "matcher": "fondesk-api/src/.*\\.spec\\.ts$",
+        "matcher": "Write(fondesk-api/src/.*\\.spec\\.ts$)",
         "hooks": [
           {
             "type": "command",
@@ -101,7 +119,7 @@
         ]
       },
       {
-        "matcher": "fondesk-api/src/.*\\.entity\\.ts$",
+        "matcher": "Write(fondesk-api/src/.*\\.entity\\.ts$)",
         "hooks": [
           {
             "type": "command",
@@ -110,7 +128,7 @@
         ]
       },
       {
-        "matcher": "fondesk-api/src/.*\\.service\\.ts$",
+        "matcher": "Write(fondesk-api/src/.*\\.service\\.ts$)",
         "hooks": [
           {
             "type": "command",
@@ -119,7 +137,7 @@
         ]
       },
       {
-        "matcher": "fondesk-api/src/.*/dto/.*\\.dto\\.ts$",
+        "matcher": "Write(fondesk-api/src/.*/dto/.*\\.dto\\.ts$)",
         "hooks": [
           {
             "type": "command",
@@ -128,7 +146,7 @@
         ]
       },
       {
-        "matcher": "fondesk-api/src/.*\\.migration\\.ts$",
+        "matcher": "Write(fondesk-api/src/.*\\.migration\\.ts$)",
         "hooks": [
           {
             "type": "command",
@@ -140,7 +158,12 @@
   },
   "permissions": {
     "allow": [
-      "Read(*)"
+      "Read(*)",
+      "Edit(*)",
+      "Write(*)",
+      "Bash(*)",
+      "WebFetch(*)",
+      "WebSearch(*)"
     ]
   },
   "statusLine": {

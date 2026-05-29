@@ -106,6 +106,12 @@ JSON 出力で `permissionDecision: "ask"` を返します：
 ### 参考ドキュメント
 - https://code.claude.com/docs/en/hooks
 
+## ファイル変更前の説明ルール
+
+Edit または Write ツールを使う前に、必ず1文でどのファイルに何を変更するか説明してから実行する。
+
+例：「`src/foo.ts` の `handleError` 関数にログ出力を追加します。」
+
 ## 深掘り質問ルール
 
 実装タスクを受けた際は、以下を確認してから実装を開始：

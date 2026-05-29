@@ -138,6 +138,11 @@
       }
     ]
   },
+  "permissions": {
+    "allow": [
+      "Read(*)"
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "echo 'Claude Code'"

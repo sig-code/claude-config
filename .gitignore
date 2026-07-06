@@ -7,10 +7,6 @@
 !.gitignore
 !settings.template.json
 !CLAUDE.md
-!commands.md
-!MODEL_SWITCH_README.md
-!SETUP_COMPLETE.md
-!switch-model.sh
 
 # Include directories and their contents
 !commands/
@@ -19,8 +15,19 @@
 !agents/**
 !skills/
 !skills/**
-!templates/
-!templates/**
+!output-styles/
+!output-styles/**
+
+# Vendor-distributed skills (reinstallable, keep repo slim)
+skills/agents-sdk/
+skills/cloudflare/
+skills/cloudflare-email-service/
+skills/durable-objects/
+skills/sandbox-sdk/
+skills/turnstile-spin/
+skills/web-perf/
+skills/workers-best-practices/
+skills/wrangler/
 
 # Exclude sensitive files even if matched above
 settings.json

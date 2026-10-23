@@ -18,17 +18,10 @@
 !output-styles/
 !output-styles/**
 
-# Vendor-distributed skills (reinstallable, keep repo slim)
-skills/agents-sdk/
-skills/cloudflare/
-skills/cloudflare-email-service/
-skills/durable-objects/
-skills/sandbox-sdk/
-skills/turnstile-spin/
-skills/web-perf/
-skills/workers-best-practices/
-skills/wrangler/
 
 # Exclude sensitive files even if matched above
 settings.json
 statusline.sh
+
+# Python caches
+__pycache__/

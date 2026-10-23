@@ -13,6 +13,13 @@ description: バグ調査・修正・インシデント対応・Bugsnagトリア
 
 ## Bugsnag トリアージ（「エラー見て」系の依頼）
 
+Bugsnag は MCP として常駐させていない。以下の `bugsnag_*` ツールは、Bash から CLI 経由で呼ぶ（呼ぶたびにサーバーが起動し、終わると止まる）:
+
+```bash
+node ~/.config/claude-mcp/bugsnag.mjs list                                     # ツール名と引数の一覧
+node ~/.config/claude-mcp/bugsnag.mjs call bugsnag_list_project_errors '{"projectId":"..."}'
+```
+
 1. `bugsnag_get_current_project` で対象プロジェクトを確認（指定がなければ fondesk 系）。横断確認は `bugsnag_list_projects`
 2. `bugsnag_list_project_errors` で直近（デフォルト24時間、指定があればその期間）を取得。発生件数順と初回発生日時順の両方を見る
 3. 分類:
